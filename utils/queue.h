@@ -75,7 +75,7 @@ template <typename T>
 class ts_queue_with_capacity {
 private:
     size_t _capacity = std::numeric_limits<size_t>::max();
-    std::queue _que;
+    std::queue<std::shared_ptr<T>> _que;
     mutable std::mutex _mu;
     std::condition_variable _full_cv;
     std::condition_variable _empty_cv;
@@ -123,7 +123,8 @@ public:
         if (_closed) {
             return false;
         } 
-        _que.push(std::move(t)); 
+        std::shared_ptr<T> data(std::make_shared<T>(std::move(t)));
+        _que.push(std::move(data)); 
         _empty_cv.notify_one();
         return true;
     }
@@ -158,7 +159,7 @@ public:
 
     std::shared_ptr<T> wait_pop() {
         std::unique_lock<std::mutex> ul(_mu);
-        _cv.wait(ul, [this]{return !_que.empty();});
+        _empty_cv.wait(ul, [this]{return !_que.empty();});
         std::shared_ptr<T> ret = _que.front();
         _que.pop();
         _full_cv.notify_one();

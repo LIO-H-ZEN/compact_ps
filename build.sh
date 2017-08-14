@@ -78,6 +78,21 @@ function setup() {
     # generate include
 }
 
+function build() {
+    execshell "setup build"
+    [ ! -d build ] && execshell "mkdir build"
+    execshell "pushd build"
+    execshell "$CMAKE .."
+    if [ $# -gt 1 ]; then
+        shift
+        execshell "make $* -j$J"
+    else
+        execshell "make all -j$J"
+    fi
+        execshell "popd"
+}
+
+
 function usage() {
 echo -e  "
 `color 32 USAGE`: build.sh [<CMD>]
@@ -109,7 +124,9 @@ case $1 in
     ###### build related #####
    
     ###### test related #####
-
+    unit)
+        execshell "build"
+    ;;     
     ###### doc related #####
 
     ###### env related #####
