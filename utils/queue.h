@@ -115,11 +115,13 @@ public:
     void close() {
         std::lock_guard<std::mutex> lg(_mu);
         _closed = true;
+        _empty_cv.notify_all();
+        _full_cv.notify_all();
     }
 
     bool push(T &t) {
         std::unique_lock<std::mutex> ul(_mu); 
-        _full_cv.wait(ul, [this]{return !_que.size() >= _capacity || _closed;});
+        _full_cv.wait(ul, [this]{return !(_que.size() >= _capacity) || _closed;});
         if (_closed) {
             return false;
         } 
@@ -149,20 +151,28 @@ public:
         return ret;
     }
 
-    void wait_pop(T& ret) {
+    bool wait_pop(T& ret) {
         std::unique_lock<std::mutex> ul(_mu);
-        _empty_cv.wait(ul, [this]{return !_que.empty();});
+        _empty_cv.wait(ul, [this]{return !_que.empty() || _closed;});
+        if (_closed && _que.empty()) {
+            return false;
+        }
         ret = std::move(*_que.front());
         _que.pop();
         _full_cv.notify_one();
+        return true;
     }
 
     std::shared_ptr<T> wait_pop() {
         std::unique_lock<std::mutex> ul(_mu);
-        _empty_cv.wait(ul, [this]{return !_que.empty();});
+        _empty_cv.wait(ul, [this]{return !_que.empty() || _closed; });
+        if (_closed && _que.empty()) {
+            return nullptr;
+        }
         std::shared_ptr<T> ret = _que.front();
         _que.pop();
         _full_cv.notify_one();
+        return ret;
     }
 
     

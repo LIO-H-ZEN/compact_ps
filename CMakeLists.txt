@@ -6,7 +6,7 @@ else()
     message(FATAL_ERROR "not supported os")
 endif()
 
-add_definitions(-O3 --std=c++14 -Wall -Wextra -Wno-deprecated-declarations)
+add_definitions(-O0 --std=c++14 -Wall -Wextra -Wno-deprecated-declarations)
 
 # include directories
 include_directories(SYSTEM prepare/include utils/)
