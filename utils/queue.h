@@ -1,5 +1,6 @@
 // 20170813 by liuzhaocheng
 #ifndef LZC_CPS_UTILS_QUEUE_H
+#define LZC_CPS_UTILS_QUEUE_H
 
 #include "common.h"
 
@@ -28,7 +29,7 @@ public:
         return _que.size();
     }    
     
-    void push(T &t) {
+    void push(const T &t) {
         std::shared_ptr<T> data(std::make_shared<T>(std::move(t)));
         std::lock_guard<std::mutex> lg(_mu);
         _que.push(std::move(data));
@@ -119,7 +120,7 @@ public:
         _full_cv.notify_all();
     }
 
-    bool push(T &t) {
+    bool push(const T &t) {
         std::unique_lock<std::mutex> ul(_mu); 
         _full_cv.wait(ul, [this]{return !(_que.size() >= _capacity) || _closed;});
         if (_closed) {
@@ -138,6 +139,7 @@ public:
         }
         ret = std::move(*_que.front());
         _que.pop();
+        _full_cv.notify_one();
         return true;
     }
 
@@ -148,6 +150,7 @@ public:
         }
         std::shared_ptr<T> ret = _que.front();
         _que.pop();
+        _full_cv.notify_one();
         return ret;
     }
 
