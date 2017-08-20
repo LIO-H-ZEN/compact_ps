@@ -4,3 +4,4 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g")
 
 add_executable(utils_queue_test utils_queue.cpp)
 add_executable(utils_barrier_test utils_barrier.cpp)
+add_executable(utils_asynexec_test utils_asynexec.cpp)
