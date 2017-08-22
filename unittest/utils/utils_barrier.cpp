@@ -1,7 +1,7 @@
 #include <limits.h>
-#include "../../utils/common.h"
-#include "../../utils/queue.h"
-#include "../../utils/barrier.h"
+#include "../../utils/Common.h"
+#include "../../utils/Queue.h"
+#include "../../utils/Barrier.h"
 #include "gtest/gtest.h"
 namespace lzc {
 

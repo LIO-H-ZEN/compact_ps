@@ -1,6 +1,6 @@
 #include <limits.h>
-#include "../../utils/common.h"
-#include "../../utils/asynexec.h"
+#include "../../utils/Common.h"
+#include "../../utils/AsynExec.h"
 #include "gtest/gtest.h"
 namespace lzc {
 

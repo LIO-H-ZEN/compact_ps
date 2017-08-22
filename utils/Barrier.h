@@ -1,7 +1,7 @@
 #ifndef LZC_UTILS_BARRIER_H
 #define LZC_UTILS_BARRIER_H
 
-#include "common.h"
+#include "Common.h"
 
 namespace lzc {
 class barrier_base {

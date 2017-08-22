@@ -1,8 +1,8 @@
 #ifndef LZC_UTILS_BUFFER_H
 #define LZC_UTILS_BUFFER_H
 
-#include "common.h"
-#include "noncopyable_object.h"
+#include "Common.h"
+#include "NoncopyableObject.h"
 
 namespace lzc {
 class basic_buffer : public noncopyable_obj {

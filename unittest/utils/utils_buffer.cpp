@@ -1,6 +1,6 @@
 #include <limits.h>
-#include "../../utils/common.h"
-#include "../../utils/buffer.h"
+#include "../../utils/Common.h"
+#include "../../utils/Buffer.h"
 #include "gtest/gtest.h"
 namespace lzc {
 

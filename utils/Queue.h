@@ -2,7 +2,7 @@
 #ifndef LZC_CPS_UTILS_QUEUE_H
 #define LZC_CPS_UTILS_QUEUE_H
 
-#include "common.h"
+#include "Common.h"
 
 namespace lzc {
 

@@ -1,10 +1,10 @@
 #ifndef LZC_UTILS_ASYNEXEC_H
 #define LZC_UTILS_ASYNEXEC_H
 
-#include "common.h"
-#include "barrier.h"
-#include "queue.h"
-#include "noncopyable_object.h"
+#include "Common.h"
+#include "Barrier.h"
+#include "Queue.h"
+#include "NoncopyableObject.h"
 
 namespace lzc {
 class asynexec : public noncopyable_obj {
