@@ -10,6 +10,8 @@
 #include <memory>
 #include <cstdio>
 #include <stdint.h>
+#include <string>
+#include <utility>
 
 #include "glog/logging.h"
 
