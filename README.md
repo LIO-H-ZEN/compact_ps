@@ -7,4 +7,4 @@
 * gtest
 * zlib
 * sparsehash
-* openmpi
+* openmpi (ref: https://computing.llnl.gov/tutorials/mpi/)

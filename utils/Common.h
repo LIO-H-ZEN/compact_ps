@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "glog/logging.h"
+#include "mpi.h"
 
 // typedef 
 typedef unsigned char byte_t;
