@@ -1,4 +1,4 @@
-link_libraries("${LINK_LIB_PREFIX}" gtest gtest_main glog zmq gflags boost_system "${LINK_LIB_SUFFIX}")
+link_libraries("${LINK_LIB_PREFIX}" gtest gtest_main glog zmq gflags boost_system mpi "${LINK_LIB_SUFFIX}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g")
 
@@ -8,3 +8,4 @@ add_executable(utils_asynexec_test utils_asynexec.cpp)
 add_executable(utils_buffer_test utils_buffer.cpp)
 add_executable(utils_string_test utils_string.cpp)
 add_executable(utils_env_util_test utils_env_util.cpp)
+add_executable(utils_mpi_test utils_mpi.cpp)
