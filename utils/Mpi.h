@@ -2,7 +2,7 @@
 #define LZC_UTILS_MPI_H
 
 #include "NoncopyableObject.h"
-#include "Env_util.h"
+#include "EnvUtil.h"
 #include "Common.h"
 
 namespace lzc {

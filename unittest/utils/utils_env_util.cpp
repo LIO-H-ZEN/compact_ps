@@ -1,6 +1,6 @@
 #include <limits.h>
 #include "../../utils/Common.h"
-#include "../../utils/Env_util.h"
+#include "../../utils/EnvUtil.h"
 #include "gtest/gtest.h"
 namespace lzc {
 
