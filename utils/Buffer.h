@@ -17,6 +17,12 @@ public:
         _end = _cur = _start; 
     }
 
+    void clear() {
+        _start = nullptr;
+        _cur = _start;
+        _end = _start;
+    }
+
     ~basic_buffer() {
         if (_start) {
             delete _start;
@@ -24,7 +30,15 @@ public:
             _capacity = 0;
         }
     }
-   
+
+    size_t size() {
+        return _cur - _start;
+    }
+
+    char *buffer() {
+        return _start;
+    }
+
     bool can_forward(size_t lens) {
         if (_cur - _start + lens < _capacity) {
             return true;
