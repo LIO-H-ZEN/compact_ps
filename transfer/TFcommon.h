@@ -11,6 +11,7 @@
 #include "../utils/RWlock.h"
 #include "../utils/String.h"
 #include "../utils/EnvUtil.h"
+#include "../utils/SpinLock.h"
 
 // 忽略异常每次都继续执行
 template <typename FUNC, typename... ARGS>
@@ -35,5 +36,13 @@ void zmq_bind_random_port(std::string &ip, void *socket, std::string &addr, int 
         }
         break;
     } 
+}
+
+void zmq_push_once(const std::string &addr, void *zmq_ctx, zmq_msg_t *msg) {
+    void *socket = zmq_socket(zmq_ctx, ZMQ_PUSH);
+    CHECK(socket != NULL);
+    ignore_signal_call(zmq_connect, socket, addr.c_str());
+    ignore_signal_call(zmq_send, msg, socket, ZMQ_DONTWAIT);
+    LOG(INFO) << "zmq send once finished !";
 }
 #endif

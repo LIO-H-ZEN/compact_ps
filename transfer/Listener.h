@@ -30,7 +30,9 @@ public:
     }
 
     virtual main_loop() {}
-    
+
+    virtual service_finished() {}    
+
     void service_start() {
         LOG(INFO) << "service starts " << _thread_num << " threads";
         PCHECK(_thread_num > 0);
@@ -38,7 +40,20 @@ public:
             _threads.emplace_back([this](){main_loop();});
         }
     }    
-    
+
+    void service_end() {
+        LOG(INFO) << "service end";
+        {
+            std::lock_guard<spinlock> lg(_spl);
+            CHECK(service_finished()) << "service not finished... can't end!";    
+        }
+        // TODO still have another task to check ?
+        for (int i = 0; i < _thread_num; ++i) {
+            _threads[i].join();
+        }
+        _threads.clear();
+    }    
+
 private:
     void *_zmq_ctx = NULL; 
     void *_rcv_socket = NULL;
@@ -47,6 +62,7 @@ private:
     int _rcv_port = -1;
     std::vector<std::thread> _threads;
     int _thread_num = 0;
+    spinlock _spl;
 }; // class listener
 }; // namespace lzc
 #endif
