@@ -42,7 +42,7 @@ void zmq_push_once(const std::string &addr, void *zmq_ctx, zmq_msg_t *msg) {
     void *socket = zmq_socket(zmq_ctx, ZMQ_PUSH);
     CHECK(socket != NULL);
     ignore_signal_call(zmq_connect, socket, addr.c_str());
-    ignore_signal_call(zmq_send, msg, socket, ZMQ_DONTWAIT);
+    ignore_signal_call(zmq_msg_send, msg, socket, ZMQ_DONTWAIT);
     LOG(INFO) << "zmq send once finished !";
 }
 #endif
