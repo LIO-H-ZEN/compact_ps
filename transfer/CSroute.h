@@ -8,7 +8,6 @@ namespace lzc {
 
 class csroute : public basic_route {
 public:
-
     static csroute &global_route() {
         static csroute route;
         return route;

@@ -63,6 +63,10 @@ public:
         return _id_mutexs[id];
     } 
 
+    void *zmq_ctx() {
+        return _zmq_ctx;
+    }
+
     virtual ~basic_route() {
         for (auto &socket : _id_sockets) {
             PCHECK(0 == zmq_close(socket));

@@ -6,6 +6,7 @@
 
 #include "glog/logging.h"
 
+#include "../utils/Common.h"
 #include "../utils/NoncopyableObject.h"
 #include "../utils/Buffer.h"
 #include "../utils/RWlock.h"

@@ -10,7 +10,12 @@ public:
     explicit listener(void *zmq_ctx, int thread_num) : _zmq_ctx(zmq_ctx),_thread_num(thread_num) {
         PCHECK(_recv_socket = zmq_socket(_zmq_ctx, ZMQ_PULL));
     }
-    
+
+    void set_zmq_ctx(void *_zmq_ctx) {
+        zmq_ctx = _zmq_ctx;
+        PCHECK(_recv_socket = zmq_socket(_zmq_ctx, ZMQ_PULL));
+    }    
+
     void listen() {
         if (_recv_ip.empty()) {
             _recv_ip = get_local_ip();
