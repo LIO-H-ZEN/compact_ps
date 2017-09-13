@@ -61,13 +61,16 @@ bool headswith(const std::string &str, const std::string &head) {
     }
 }
 
+// ret不要为空字符串
 template<typename... ARGS>
 void format_string(std::string &ret, const std::string &format, ARGS... args) {
+    PCHECK(ret.size() > 0) << "first arg of format_string must be at least length 1";
     const char* cf = format.c_str();
     size_t prefix_len = ret.size();
+    // 注意%s对应的string.c_str()
     int args_len = snprintf(NULL, 0, cf, args...);
     ret.resize(prefix_len + args_len + 1);
-    CHECK(snprintf(&ret[prefix_len], prefix_len + args_len, cf, args...) == args_len);
+    CHECK(std::snprintf(&ret[prefix_len], prefix_len + args_len, cf, args...) == args_len);
     ret.resize(prefix_len + args_len);
 }
 

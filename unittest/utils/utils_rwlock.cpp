@@ -29,7 +29,7 @@ TEST(utils_rwlock_h, all_test) {
             std::this_thread::sleep_for(2s);
         }
     };
-    exec.feed(f);
+    exec.feed2all(f);
     exec.close();
 }
 }; // namespace lzc

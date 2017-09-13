@@ -13,12 +13,15 @@
 #include "../utils/String.h"
 #include "../utils/EnvUtil.h"
 #include "../utils/SpinLock.h"
+#include "../utils/AsynExec.h"
+
+namespace lzc {
 
 // 忽略异常每次都继续执行
 template <typename FUNC, typename... ARGS>
 void ignore_signal_call(FUNC func, ARGS &&... args) {
     for (;;) {
-        auto ret = func(args);
+        auto ret = func(args...);
         if (ret < 0 && errno == EINTR) {
             LOG(INFO) << "ignore_signal_call ignored a error";
             continue;
@@ -28,11 +31,14 @@ void ignore_signal_call(FUNC func, ARGS &&... args) {
 }
  
 void zmq_bind_random_port(std::string &ip, void *socket, std::string &addr, int &port) {
+    std::string addr_ori(addr);
     for(;;) {
-        addr = "";
+        addr = addr_ori;
         port = 1024 + rand() % (65536 - 1024); 
-        addr = format_string(ip, ":%d", port);
-        if (-1 == zmq_bind(socket, addr)) {
+        format_string(addr, "%s:%d", ip.c_str(), port);
+        if (-1 == zmq_bind(socket, addr.c_str())) {
+            LOG(INFO) << "binding " << addr << " failed";
+            LOG(INFO) << "errno: " << errno << " zmq_strerror:" << zmq_strerror(errno);
             continue;
         }
         break;
@@ -46,4 +52,5 @@ void zmq_push_once(const std::string &addr, void *zmq_ctx, zmq_msg_t *msg) {
     ignore_signal_call(zmq_msg_send, msg, socket, ZMQ_DONTWAIT);
     LOG(INFO) << "zmq send once finished !";
 }
+}; // namespace lzc
 #endif

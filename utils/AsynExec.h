@@ -50,7 +50,7 @@ public:
     } 
 
     // not thread safe
-    void feed(const task_t &task) {
+    void feed2all(const task_t &task) {
         // feed real task to channel
         for (int i = 0; i < _thread_num; ++i) {
             auto rt = task;

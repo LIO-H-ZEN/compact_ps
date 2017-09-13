@@ -53,6 +53,7 @@ TEST(utils_string_h, string_format_string_test) {
     std::string format = "://%d.%d.%d.%d";
     std::vector<int> args = {1,2,3,4};
     format_string(prefix, format, args[0], args[1], args[2], args[3]);
-    EXPECT_EQ(prefix, std::string("http://1.2.3.4"));
+    std::string ans("http://1.2.3.4");
+    EXPECT_EQ(prefix, ans);
 }
 }; // namespace lzc

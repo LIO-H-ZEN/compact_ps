@@ -45,7 +45,26 @@ public:
         }
     }
 
+    // 0 socket 1 addr 2 mutex
+    static const int ROUTE_SOCKET = 0;
+    static const int ROUTE_ADDR = 1;
+    static const int ROUTE_MUTEX = 2;
+
+    int count(int id, int which) {
+        if (which == 0) {
+            return _id_sockets.count(id);
+        } else if (which == 1) {
+            return _id_addrs.count(id);
+        } else if (which == 2) {
+            return _id_mutexs.count(id);
+        } else {
+            LOG(WARNING) << "route.contains() not support which param";
+            return 0;
+        }
+    }
+
     // thread safe
+    // check this id exist in upper code
     void *get_socket(int id) {
         rlock_guard rg(&_rwlock);
         return _id_sockets[id];

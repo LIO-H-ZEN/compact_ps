@@ -22,7 +22,7 @@ TEST(utils_asynexec_h, only_input_channel) {
         }
         exec.push_output(ret);
     };
-    exec.feed(task);
+    exec.feed2all(task);
 
     exec.close();
     

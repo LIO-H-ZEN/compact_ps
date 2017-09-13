@@ -20,6 +20,11 @@ public:
         _node_id = node_id;
     }
 
+    void init_asynexec(int thread_num) {
+        _exec.set_thread_num(thread_num);        
+        _exec.open();
+    }
+
     void main_loop() noexcept {
         package recv_pkg; 
         package_parser parser;
@@ -77,11 +82,48 @@ public:
         }
     }
 
-    void handle_request(package &p) {
-        package_parser parser(p);
-        parser.get_handler_id() 
+    void handle_request(package &request) noexcept {
+        package_parser parser(request);
+        size_t handler_id = parser.get_handler_id(); 
+        request_handler_t handler = _req_handler_map.get(handler_id);
+        task_t task = [&] {
+            package response;
+            handler(request, response);  // handler需要构造好response
+            // send
+            package_parser response_parser(response);
+            if (response_parser.get_msg_size() > 0) {
+                send_response(std::move(response), response_parser.get_node_id());
+            } else {
+                LOG(INFO) << "not need to send response ";
+            }    
+        }; 
+        _exec.push(task); 
+    }
+
+    void send_response(package &&response, size_t dest_id) noexcept {
+        PCHECK(global_route().count(dest_id, basic_route::ROUTE_SOCKET)) << "dest_id not in route";
+        auto socket = global_route().get_socket();
+        ignore_signal_call(zmq_msg_send, &(response.meta().get_msg()), _route.get_socket    (dest_id), ZMQ_SNDMORE);
+        ignore_signal_call(zmq_msg_send, &(response.msg().get_msg()), _route.get_socket(dest_id), ZMQ_DONTWAIT);
     }
     
+    void handle_response(package &response) noexcept {
+        package_parser parser(response);
+        ponse_callback_t rct;
+        size_t msg_id = parser.get_msg_id();
+        {
+            rlock_guard rg(_rwl); 
+            auto search = _rep_callback_map.find(msg_id);
+            PCHECK(search != _rep_callback_map.end()) << "not found response callback func..";
+            rct = std::move(search -> second); 
+            _rep_callback_map.erase(search); 
+        }
+        task_t task = [&]() {
+            rct(response); 
+        }; 
+        _exec.push(task);
+    }
+
 private:
     ROUTE &_route;
     int _node_id = -2;
@@ -90,8 +132,11 @@ private:
     std::unordered_map<int, response_callback_t> _rep_callback_map; // (msg_id, response_callback)
     rwlock _rwl;
    
+    // thread-safe
     handler_map<request_handler_t> _req_handler_map; // (handler_id, request_handler) 
     std::mutex _recv_mutex;    
+
+    asynexec<message, message> _exec; 
 }; // class transfer
 }; // namespace lzc
 #endif
