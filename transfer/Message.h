@@ -32,7 +32,7 @@ public:
         bb.clear();
     }
     // cp
-    message(char *buf, size_t size) {
+    message(const char *buf, size_t size) {
         PCHECK(0 == zmq_msg_init_size(&_msg, size)); 
         memcpy(msg_data(), buf, size);
     }
@@ -83,7 +83,7 @@ private:
     zmq_msg_t _msg;
     // ref: http://api.zeromq.org/4-1:zmq-msg-init-data
     // Example
-    void my_free (void *data, void *hint) {
+    static void my_free (void *data, void *hint) {
         free(data);
     }   
 }; // class message
@@ -98,7 +98,7 @@ public:
     }
 
     void set_msg(binary_buffer &bb) {
-        _msg.reset(bb);
+        _msg.reset(std::move(bb));
     }
 
     message &meta() {
@@ -132,11 +132,11 @@ public:
     }
    
     // get meta attrs 
-    void get_node_id() {return meta._node_id;}
-    void get_handler_id() {return meta._handler_id;}
-    void get_msg_id() {return meta._msg_id;}
-    void get_msg_size() {return meta._msg_size;}
-    void get_msg_type() {return meta._is_request;}
+    size_t get_node_id() {return meta._node_id;}
+    size_t get_handler_id() {return meta._handler_id;}
+    size_t get_msg_id() {return meta._msg_id;}
+    size_t get_msg_size() {return meta._msg_size;}
+    bool get_msg_type() {return meta._is_request;}
 private:
     message_meta meta;
     binary_buffer bb; // msg

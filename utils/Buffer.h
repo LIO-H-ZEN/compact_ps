@@ -76,6 +76,7 @@ private:
 
 class binary_buffer : public basic_buffer {
 public:
+    explicit binary_buffer() : basic_buffer() {}
     explicit binary_buffer(size_t capacity) : basic_buffer(capacity) {}
 
 #define BUFFER_OPERATOR_OVERRIDE(X)                            \

@@ -1,7 +1,5 @@
 #include <limits.h>
 #include "../../transfer/TFcommon.h"
-#include "../../utils/EnvUtil.h"
-#include "../../utils/Mpi.h"
 #include "gtest/gtest.h"
 namespace lzc {
 
@@ -27,5 +25,4 @@ TEST(ut_tfcommon_h, zmq_bind_random_port) {
     zmq_ctx_destroy(zmq_ctx);
     CPS_MPI::singleton().finalize();
 }
-
 }; // namespace lzc
