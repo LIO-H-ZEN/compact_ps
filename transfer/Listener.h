@@ -11,6 +11,10 @@ public:
         PCHECK(_recv_socket = zmq_socket(_zmq_ctx, ZMQ_PULL));
     }
 
+    void set_thread_num(int thread_num) {
+        _thread_num = thread_num;
+    }
+
     void set_zmq_ctx(void *_zmq_ctx) {
         zmq_ctx = _zmq_ctx;
         PCHECK(_recv_socket = zmq_socket(_zmq_ctx, ZMQ_PULL));
@@ -61,6 +65,10 @@ public:
 
     void *recv_socket() {
         return _recv_socket;
+    }
+
+    int recv_port() {
+        return _recv_port;
     }
 
 private:
